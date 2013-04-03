@@ -5,7 +5,7 @@ boolean SD_init() {
   pinMode(10, OUTPUT); 
 
   if(!SD.begin(SD_CS)){
-    Serial.println(F("SD: ERROR"));
+    Serial.println(F("SD Error"));
     Error();
   }
 }

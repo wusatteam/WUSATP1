@@ -2,7 +2,7 @@
 void Log_analog() {
   // Timestamp
   RTC_timestamp();
-  Serial.print(F("Log point: "));
+  Serial.print(F("Log: "));
   Serial.println(timestamp);
 
   if(clearLog){
@@ -26,7 +26,7 @@ void Log_analog() {
     f_pres.println(r_pres,DEC);
   } 
   else {
-    Serial.println(F("Error saving PRES readings"));
+    Serial.println(F("File Error"));
   }
   f_pres.close();
 
@@ -40,7 +40,7 @@ void Log_analog() {
     f_temp1.println(r_temp1,DEC);
   } 
   else {
-    Serial.println(F("Error saving TEMP1 readings"));
+    Serial.println(F("File Error"));
   }
   f_temp1.close();
 
@@ -54,9 +54,7 @@ void Log_analog() {
     f_temp2.println(r_temp1,DEC);
   } 
   else {
-    Serial.println(F("Error saving TEMP2 readings"));
+    Serial.println(F("File Error"));
   }
   f_temp2.close();
 }
-
-

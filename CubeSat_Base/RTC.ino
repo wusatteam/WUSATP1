@@ -8,7 +8,7 @@ void RTC_init() {
     RTC.adjust(DateTime(__DATE__, __TIME__));
     
 #ifdef DEBUG_ON 
-    Serial.println(F("\tRTC: Backup Battery Failed")); 
+    Serial.println(F("\tRTC: Batt Error")); 
 #endif
 
   }

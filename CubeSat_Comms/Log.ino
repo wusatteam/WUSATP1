@@ -86,8 +86,3 @@ void Log_analog() {
   }
   f_temp2.close();
 }
-
-
-
-
-

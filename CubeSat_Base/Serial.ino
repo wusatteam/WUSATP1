@@ -43,7 +43,7 @@ void DEBUGLN(char* str){
 }
 
 void Cmd_shutdown(){
-  CMD_PORT.println(F("SHUTDOWN"));
+  CMD_PORT.println(F("SDN"));
   Error();
 }
 
@@ -53,7 +53,7 @@ void Cmd_set(){
   CMD_PORT.readBytes(date,11);
   CMD_PORT.readBytes(time,8);
   RTC.adjust(DateTime(date,time));
-  CMD_PORT.println(F("Date/Time Updated."));
+  CMD_PORT.println(F("D/T Updated."));
 }
 
 void Cmd_reset(){
@@ -67,5 +67,16 @@ void Cmd_pause(){
     ;
 }
 
+void Serial_header(){
+  // Header and build information
+  Serial.println(F("CubeSat FW - Comms"));
+  Serial.print(F("V "));
+  Serial.print(__DATE__);
+  Serial.print(' ');
+  Serial.println(__TIME__);
+#ifdef DEBUG_ON
+  Serial.println(F("\tDBG ON"));
+#endif
+}
 
 

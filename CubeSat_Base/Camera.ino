@@ -10,24 +10,24 @@ void Cam_init() {
   Cam.setTimeout(5000);
 
 #ifdef DEBUG_ON 
-  Serial.print(F("\tCAM: RX Buffer: ")); 
+  Serial.print(F("\tCAM: RX B: ")); 
   Serial.println(_SS_MAX_RX_BUFF,DEC);
-  Serial.print(F("\tCAM: Block Size: ")); 
+  Serial.print(F("\tCAM: BLK: ")); 
   Serial.println(BLK,DEC);
 #endif
 
   if(_SS_MAX_RX_BUFF<256)
-    Serial.println(F("RX buffer too small"));
+    Serial.println(F("RX B Error"));
 
   if(!Cam_reset()){
-    Serial.println(F("Camera Init Failed"));
+    Serial.println(F("Camera Error"));
     Error();
   }
 }
 
 boolean Cam_reset() {
   const char RESET[4] = {
-    0x56,0x00,0x26,0x00                                                                        };
+    0x56,0x00,0x26,0x00                                                                              };
   Cam_command(RESET,4);
 
   rcv = Cam.readBytes(res,71); //71
@@ -36,7 +36,7 @@ boolean Cam_reset() {
 
 void Cam_capture() {
   const char CAPTURE[5] = {
-    0x56,0x00,0x36,0x01,0x00                                                                        };
+    0x56,0x00,0x36,0x01,0x00                                                                              };
 
 #ifdef OPTION_FLASH
   LED_on();
@@ -47,7 +47,7 @@ void Cam_capture() {
 
   rcv = Cam.readBytes(res,5); //5
   if(rcv<5){
-    Serial.println("Error Capturing Picture");
+    Serial.println("Capture Error");
     Error();
   }
 
@@ -58,12 +58,12 @@ void Cam_capture() {
 
 unsigned int Cam_size() {
   const char SIZE[5]={
-    0x56,0x00,0x34,0x01,0x00                                              };
+    0x56,0x00,0x34,0x01,0x00                                                    };
   Cam_command(SIZE,5);
 
   rcv = Cam.readBytes(res,9);
   if(rcv<9){
-    Serial.println(F("Error reading file size"));
+    Serial.println(F("Size Error"));
     Error();
   }
   else{
@@ -74,22 +74,24 @@ unsigned int Cam_size() {
   }
 }
 
-boolean Cam_setRes(){
+void Cam_setRes(){
   const char RES[9] = {
-    0x56,0x00,0x31,0x05,0x04,0x01,0x00,0x19,0x00                                              };
+    0x56,0x00,0x31,0x05,0x04,0x01,0x00,0x19,0x00                                                    };
   Cam_command(RES,9);
 
   rcv=Cam.readBytes(res,5); //5
   if(rcv==5){
     Cam_reset();
-    return true;
+  } 
+  else {
+    Serial.println(F("Set Resolution Failed"));
+    Error();
   }
-  return false;
 }
 
 void Cam_download() {
   const char READ[8] = {
-    0x56,0x00,0x32,0x0C,0x00,0x0A,0x00,0x00                      };
+    0x56,0x00,0x32,0x0C,0x00,0x0A,0x00,0x00                            };
 
   long addr=0x0000;
   long total=0;
@@ -117,7 +119,7 @@ void Cam_download() {
   // Open file
   File pic = SD.open(fname, FILE_WRITE);
   if(!pic){
-    Serial.println(F("Error opening picture file"));
+    Serial.println(F("File Error"));
     Error();
   }
 
@@ -142,7 +144,7 @@ void Cam_download() {
     // Discard 5
     rcv=Cam.readBytes(res,5);
     if(rcv<5){
-      Serial.println(F("Preamble response too short"));
+      Serial.println(F("Response Error"));
       Error();
     }
 
@@ -155,9 +157,9 @@ void Cam_download() {
 #endif
 
     if(rcv<BLK){
-      Serial.print(F("Error Downloading Block: "));
+      Serial.print(F("Block Error: "));
       Serial.println(BLK,DEC);
-      Serial.print("Received: ");
+      Serial.print("Rcv: ");
       Serial.print(rcv,DEC);
       Error();
     }
@@ -194,22 +196,23 @@ void Cam_download() {
 #ifdef DEBUG_ON
   Serial.print(F("\tP: "));
   Serial.print(total,DEC);
-  Serial.println("bytes");
+  Serial.println("b");
 #endif
 
   Cam_stop();
   Cam.flush();
+  
   pic.close();
 }
 
 void Cam_stop(){
   const char STOP[5] = {
-    0x56,0x00,0x36,0x01,0x03                    };
+    0x56,0x00,0x36,0x01,0x03                          };
   Cam_command(STOP,5);
 
   rcv = Cam.readBytes(res,5); //5
   if(rcv<5){
-    Serial.println(F("Error Stopping Capture"));
+    Serial.println(F("Capture Error"));
     Error();
   }
 }
@@ -222,17 +225,3 @@ void Cam_command(const char* command,int length) {
     Cam.write((uint8_t)command[i]);
   }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-

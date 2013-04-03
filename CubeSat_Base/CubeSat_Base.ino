@@ -1,5 +1,6 @@
-//#define DEBUG_ON //Approx 558 bytes
-#define BUILD_ID   "\tLOOP NODELAY\n\tCAM + RTCNAMING\n\tRX BUF 256\n\tBLOCK 240\n\tSENSORS\n\tCMD - SDN/RST/PAU\n\tRAMCHECK"
+//#define DEBUG_ON //Approx 498 bytes
+#define XB_ON      10
+#define XB_CTS     8
 #define CAM_RX     11
 #define CAM_TX     12
 #define LED        13
@@ -21,6 +22,8 @@
 //#define OPTION_RAM_CHECK //Approx 224 bytes
 //#define OPTION_SERIAL_WAIT
 #define CMD_PORT  Serial
+#define XBee      Serial1
+#define NODE      "WUSATBASE"
 
 // RTClib must come after Wire
 #include <Wire.h>
@@ -43,26 +46,13 @@ void setup() {
   // Initialise USB serial port - Debug
   Serial_init();
 
-  // Pause to allow terminal connection in serial mode
-  delay(2000);
-
-  // Header and build information
-  Serial.println(F("=== CubeSat Firmware - Non-Comms/GPS ==="));
-  Serial.print(F("VERSION "));
-  Serial.print(__DATE__);
-  Serial.print(' ');
-  Serial.println(__TIME__);
-  Serial.println(F(BUILD_ID));
-#ifdef DEBUG_ON
-  Serial.println(F("\tDEBUG ON"));
-#endif
+  Serial_header();
 
   // Set up port directions
   Sensor_init();
   LED_init();
 
   // Initialise SD card
-  // TODO - For if SD fails in comms mode it should not halt execution
   SD_init();
 
   // Initialise Real Time Clock - includes setting time and date to build time/date
@@ -75,10 +65,7 @@ void setup() {
 
 #ifdef OPTION_SET_RES
   // Set 640x480 resolution
-  if(!Cam_setRes()){
-    Serial.println(F("Set Resolution Failed"));
-    Error();
-  }
+  Cam_setRes();
 #endif
 
   //DEBUGLN("Boot Complete.");
@@ -94,6 +81,7 @@ void loop() {
   Serial_command();
 
   // Log analog readings
+  delay(100); //Lost character error
   Log_analog();
 
   // Take picture
