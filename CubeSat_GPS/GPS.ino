@@ -1,0 +1,87 @@
+byte gps_set_sucess = 0 ;
+char gpsbuf[79];
+
+void GPS_init(){
+  GPS.begin(9600);
+  GPS.setTimeout(3000);
+
+  // Set flight mode 
+  uint8_t setNav[] = {
+    0xB5, 0x62, 0x06, 0x24, 0x24, 0x00, 0xFF, 0xFF, 0x06, 0x03, 0x00, 0x00, 0x00, 0x00, 0x10, 0x27, 0x00, 0x00, 0x05, 0x00, 0xFA, 0x00, 0xFA, 0x00, 0x64, 0x00, 0x2C, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x16, 0xDC                                  };
+  GPS_setCommand(setNav,sizeof(setNav)/sizeof(uint8_t));
+
+  // Switching off NMEA GLL
+  uint8_t setGLL[] = { 
+    0xB5, 0x62, 0x06, 0x01, 0x08, 0x00, 0xF0, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x01, 0x2B        };
+  GPS_setCommand(setGLL,sizeof(setGLL)/sizeof(uint8_t));
+
+  // Switching off NMEA GSA
+  uint8_t setGSA[] = { 
+    0xB5, 0x62, 0x06, 0x01, 0x08, 0x00, 0xF0, 0x02, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x02, 0x32        };
+  GPS_setCommand(setGSA,sizeof(setGSA)/sizeof(uint8_t));
+
+  // Switching off NMEA GSV
+  uint8_t setGSV[] = { 
+    0xB5, 0x62, 0x06, 0x01, 0x08, 0x00, 0xF0, 0x03, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x03, 0x39        };
+  GPS_setCommand(setGSV,sizeof(setGSV)/sizeof(uint8_t));
+
+  // Switching off NMEA RMC
+  uint8_t setRMC[] = { 
+    0xB5, 0x62, 0x06, 0x01, 0x08, 0x00, 0xF0, 0x04, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x04, 0x40        };
+  GPS_setCommand(setRMC,sizeof(setRMC)/sizeof(uint8_t));
+
+  // Switching off NMEA VTG
+  uint8_t setVTG[] = { 
+    0xB5, 0x62, 0x06, 0x01, 0x08, 0x00, 0xF0, 0x05, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x05, 0x47        };
+  GPS_setCommand(setVTG,sizeof(setVTG)/sizeof(uint8_t));
+}
+
+boolean Log_GPS(){
+
+  if(clearLog){
+    clearLog=false;
+    SD.remove("GPS.csv");
+    Serial.println(F("GPS Cleared"));
+  }
+
+  File f_gps = SD.open("GPS.csv", FILE_WRITE);
+  if(f_gps){
+    Serial.print(F("GPS: "));
+    
+    f_gps.print(timestamp);
+    f_gps.print(',');
+    
+    // Clear GPS buffer
+    while(GPS.available())
+      GPS.read();
+    
+    if(GPS.find("$")){
+
+      int rcv = GPS.readBytesUntil('\r',gpsbuf,79);
+
+      for(int i=0;i<rcv;i++){
+        f_gps.write(gpsbuf[i]);
+//#ifdef DEBUG_ON
+        Serial.write(gpsbuf[i]);
+//#endif
+      }
+      f_gps.println();
+//#ifdef DEBUG_ON
+      Serial.println();
+//#endif
+    } 
+    else {
+      Serial.println(F("GPS Error"));
+    }
+
+
+  } 
+  else {
+    Serial.println(F("GPS Error"));
+  }
+  f_gps.close();  
+}
+
+
+
+
