@@ -29,6 +29,3 @@ void Sensor_update() {
   Serial.println(temp2,DEC);
 #endif
 }
-
-
-

@@ -29,7 +29,7 @@ void Serial_command(){
   }
 
   // Clear Rx buffer 
-  while(CMD_PORT.available())
+  while(CMD_PORT.available()>0)
     CMD_PORT.read();
 }
 
@@ -37,7 +37,7 @@ void Serial_command(){
 void DEBUGLN(char* str){
 #ifdef DEBUG_ON
   Serial.print(millis(),DEC);
-  Serial.print(F(": "));
+  Serial.print(": ");
   Serial.println(str);
 #endif
 }
@@ -53,7 +53,7 @@ void Cmd_set(){
   CMD_PORT.readBytes(date,11);
   CMD_PORT.readBytes(time,8);
   RTC.adjust(DateTime(date,time));
-  CMD_PORT.println(F("D/T updated"));
+  CMD_PORT.println(F("D/T Updated."));
 }
 
 void Cmd_reset(){
@@ -61,10 +61,10 @@ void Cmd_reset(){
 }
 
 void Cmd_pause(){
-  CMD_PORT.println(F("PAUSE"));
+  CMD_PORT.println("PAUSE");
   char cmd[3];
-  while(CMD_PORT.readBytes(cmd,3)<3){
-  }
+  while(CMD_PORT.readBytes(cmd,3)<3)
+    ;
 }
 
 void Serial_header(){

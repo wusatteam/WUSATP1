@@ -27,7 +27,7 @@ void Cam_init() {
 
 boolean Cam_reset() {
   const char RESET[4] = {
-    0x56,0x00,0x26,0x00                                                                        };
+    0x56,0x00,0x26,0x00                                                                              };
   Cam_command(RESET,4);
 
   rcv = Cam.readBytes(res,71); //71
@@ -36,7 +36,7 @@ boolean Cam_reset() {
 
 void Cam_capture() {
   const char CAPTURE[5] = {
-    0x56,0x00,0x36,0x01,0x00                                                                        };
+    0x56,0x00,0x36,0x01,0x00                                                                              };
 
 #ifdef OPTION_FLASH
   LED_on();
@@ -58,7 +58,7 @@ void Cam_capture() {
 
 unsigned int Cam_size() {
   const char SIZE[5]={
-    0x56,0x00,0x34,0x01,0x00                                              };
+    0x56,0x00,0x34,0x01,0x00                                                    };
   Cam_command(SIZE,5);
 
   rcv = Cam.readBytes(res,9);
@@ -76,7 +76,7 @@ unsigned int Cam_size() {
 
 void Cam_setRes(){
   const char RES[9] = {
-    0x56,0x00,0x31,0x05,0x04,0x01,0x00,0x19,0x00                                              };
+    0x56,0x00,0x31,0x05,0x04,0x01,0x00,0x19,0x00                                                    };
   Cam_command(RES,9);
 
   rcv=Cam.readBytes(res,5); //5
@@ -90,7 +90,7 @@ void Cam_setRes(){
 
 void Cam_download() {
   const char READ[8] = {
-    0x56,0x00,0x32,0x0C,0x00,0x0A,0x00,0x00                      };
+    0x56,0x00,0x32,0x0C,0x00,0x0A,0x00,0x00                            };
 
   long addr=0x0000;
   long total=0;
@@ -200,12 +200,13 @@ void Cam_download() {
 
   Cam_stop();
   Cam.flush();
+  
   pic.close();
 }
 
 void Cam_stop(){
   const char STOP[5] = {
-    0x56,0x00,0x36,0x01,0x03                    };
+    0x56,0x00,0x36,0x01,0x03                          };
   Cam_command(STOP,5);
 
   rcv = Cam.readBytes(res,5); //5
@@ -223,17 +224,3 @@ void Cam_command(const char* command,int length) {
     Cam.write((uint8_t)command[i]);
   }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-

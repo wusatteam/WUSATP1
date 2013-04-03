@@ -37,5 +37,3 @@ void RTC_timestamp(){
   timestamp[17] = '0' + now.second() / 10;
   timestamp[18] = '0' + now.second() % 10;
 }
-
-
