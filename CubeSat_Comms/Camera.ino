@@ -82,9 +82,8 @@ void Cam_setRes(){
   rcv=Cam.readBytes(res,5); //5
   if(rcv==5){
     Cam_reset();
-  } 
-  else {
-    Serial.println(F("Set Resolution Failed"));
+  } else {
+    Serial.println(F("Res Error"));
     Error();
   }
 }
@@ -108,7 +107,7 @@ void Cam_download() {
   fname[5] = '0' + now.minute()%10;
   fname[6] = '0' + now.second()/10;
   fname[7] = '0' + now.second()%10;
-  Serial.print(F("Filename: "));
+  Serial.print(F("File: "));
   Serial.println(fname);
 
   // Remove existing picture if necessary

@@ -21,14 +21,11 @@ void Sensor_update() {
   //curr = map(r_curr,0,1023,0,5000);
 
 #ifdef DEBUG_ON
-  Serial.print("\tPRES: ");
+  Serial.print(F("\tPRES: "));
   Serial.println(pres,DEC);
-  Serial.print("\tTEMP1: ");
+  Serial.print(F("\tTEMP1: "));
   Serial.println(temp1,DEC);
-  Serial.print("\tTEMP2: ");
+  Serial.print(F("\tTEMP2: "));
   Serial.println(temp2,DEC);
 #endif
 }
-
-
-
