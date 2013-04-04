@@ -1,6 +1,7 @@
 #define DEBUG_ON //Approx 498 bytes
 #define XB_ON      10
 #define XB_CTS     8
+#define XB_RST     7
 #define CAM_RX     11
 #define CAM_TX     12
 #define LED        13
@@ -85,6 +86,7 @@ void loop() {
   Serial_command();
 
   // Discover base
+  XBee_reset();
   if(xbeeDetected)
     if(XBee_enterCommand()){
       if(XBee_discoverNode()){

@@ -3,6 +3,7 @@ char xbuf[32];
 void XBee_init(){
   pinMode(XB_ON,INPUT);
   pinMode(XB_CTS,INPUT);
+  pinMode(XB_RST,INPUT);
   xbeeDetected = digitalRead(XB_ON); 
 
   if(!xbeeDetected)
@@ -75,4 +76,10 @@ void XBee_waitForCTS(){
   }
 }
 
-
+void XBee_reset(){
+  pinMode(XB_RST,OUTPUT);
+  //digitalWrite(XB_RST,LOW); //Unsure if necessary
+  delay(5); //100us minimum
+  pinMode(XB_RST,INPUT);
+  delay(10);
+}
