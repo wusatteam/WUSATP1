@@ -68,12 +68,18 @@ boolean XBee_CTS(){
 }
 
 void XBee_waitForCTS(){
-  while(!XBee_CTS()){
+  int count=0;
+  while(!XBee_CTS() && count<100){
 #ifdef DEBUG_ON
     Serial.print(F("CTS"));
 #endif
     delay(10);
+    count++;
   }
+  if(count>=100){
+    XBee_reset();
+  }
+  
 }
 
 void XBee_reset(){
