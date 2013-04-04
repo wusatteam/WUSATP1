@@ -21,4 +21,4 @@ Arduino 2 - GPS Build
 - 2x Thermocouple
 - Pressure sensor
 
-Building the code required a modification to the SoftwareSerial libray.  See the comments in the corresponding files.
+Building the code required a modification to the SoftwareSerial libray.  See the comments in the Camera.ino file.
