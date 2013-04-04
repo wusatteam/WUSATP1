@@ -27,7 +27,7 @@ void Cam_init() {
 
 boolean Cam_reset() {
   const char RESET[4] = {
-    0x56,0x00,0x26,0x00                                                                              };
+    0x56,0x00,0x26,0x00                                                                                };
   Cam_command(RESET,4);
 
   rcv = Cam.readBytes(res,71); //71
@@ -36,7 +36,7 @@ boolean Cam_reset() {
 
 void Cam_capture() {
   const char CAPTURE[5] = {
-    0x56,0x00,0x36,0x01,0x00                                                                              };
+    0x56,0x00,0x36,0x01,0x00                                                                                };
 
 #ifdef OPTION_FLASH
   LED_on();
@@ -58,7 +58,7 @@ void Cam_capture() {
 
 unsigned int Cam_size() {
   const char SIZE[5]={
-    0x56,0x00,0x34,0x01,0x00                                                    };
+    0x56,0x00,0x34,0x01,0x00                                                      };
   Cam_command(SIZE,5);
 
   rcv = Cam.readBytes(res,9);
@@ -76,13 +76,14 @@ unsigned int Cam_size() {
 
 void Cam_setRes(){
   const char RES[9] = {
-    0x56,0x00,0x31,0x05,0x04,0x01,0x00,0x19,0x00                                                    };
+    0x56,0x00,0x31,0x05,0x04,0x01,0x00,0x19,0x00                                                      };
   Cam_command(RES,9);
 
   rcv=Cam.readBytes(res,5); //5
   if(rcv==5){
     Cam_reset();
-  } else {
+  } 
+  else {
     Serial.println(F("Res Error"));
     Error();
   }
@@ -90,7 +91,7 @@ void Cam_setRes(){
 
 void Cam_download() {
   const char READ[8] = {
-    0x56,0x00,0x32,0x0C,0x00,0x0A,0x00,0x00                            };
+    0x56,0x00,0x32,0x0C,0x00,0x0A,0x00,0x00                              };
 
   long addr=0x0000;
   long total=0;
@@ -123,7 +124,7 @@ void Cam_download() {
   }
   if(xbeeDetected && xbeeDiscovered)
     XBee_waitForCTS();
-    XBee.print("APICT:");
+  XBee.print("APICT:");
 
   // Download picture
   while(!EndOfFile) {
@@ -172,6 +173,7 @@ void Cam_download() {
     if(xbeeDetected && xbeeDiscovered){
       XBee_waitForCTS();
       XBee.write(res[0]);
+      delay(10); // Character delay
       XBee_waitForCTS();
       XBee.write(res[1]);
     }
@@ -187,6 +189,7 @@ void Cam_download() {
         if(xbeeDetected && xbeeDiscovered){
           XBee_waitForCTS();
           XBee.write(res[i]);
+          delay(10); // Character delay
         }
         count++;
       }
@@ -206,7 +209,7 @@ void Cam_download() {
       XBee.flush();
       //delay(100);
     }
-    
+
     addr+=BLK;
   }
 
@@ -218,20 +221,20 @@ void Cam_download() {
 
   Cam_stop();
   Cam.flush();
-  
+
   pic.close();
-  
+
   if(xbeeDetected){
     XBee_waitForCTS();
     XBee.print("\r\n");
     XBee.flush();
   }
-  
+
 }
 
 void Cam_stop(){
   const char STOP[5] = {
-    0x56,0x00,0x36,0x01,0x03                          };
+    0x56,0x00,0x36,0x01,0x03                            };
   Cam_command(STOP,5);
 
   rcv = Cam.readBytes(res,5); //5
@@ -249,3 +252,4 @@ void Cam_command(const char* command,int length) {
     Cam.write((uint8_t)command[i]);
   }
 }
+
