@@ -1,4 +1,4 @@
-#define DEBUG_ON //Approx 498 bytes
+//#define DEBUG_ON //Approx 498 bytes
 #define XB_ON      10
 #define XB_CTS     8
 #define XB_RST     7
@@ -21,7 +21,7 @@
 #define OPTION_FLASH
 //#define OPTION_SET_RES
 //#define OPTION_RAM_CHECK //Approx 224 bytes
-#define OPTION_SERIAL_WAIT
+//#define OPTION_SERIAL_WAIT
 #define CMD_PORT  Serial1
 #define XBee      Serial1
 #define NODE      "WUSATBASE"
