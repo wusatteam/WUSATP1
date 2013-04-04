@@ -10,6 +10,8 @@ void Log_analog() {
     SD.remove("pres.csv");
     SD.remove("temp1.csv");
     SD.remove("temp2.csv");
+    SD.remove("volt.csv");
+    SD.remove("curr.csv");
     Serial.println(F("Logs Cleared"));
   }
 
@@ -85,4 +87,47 @@ void Log_analog() {
     Serial.println(F("File Error"));
   }
   f_temp2.close();
+  
+  //Voltage
+  if(xbeeDetected){
+    XBee_waitForCTS();
+    XBee.print(F("AVOLT:"));
+    XBee.print(volt,DEC);
+    XBee.print("\r\n");
+  }
+
+  File f_volt = SD.open("volt.csv", FILE_WRITE);
+  if(f_volt){
+    f_volt.print(timestamp);
+    f_volt.print(',');
+    f_volt.print(temp1,DEC);
+    f_volt.print(',');
+    f_volt.println(r_temp1,DEC);
+  } 
+  else {
+    Serial.println(F("File Error"));
+  }
+  f_volt.close();
+  
+  //Current
+  if(xbeeDetected){
+    XBee_waitForCTS();
+    XBee.print(F("ACURR:"));
+    XBee.print(curr,DEC);
+    XBee.print("\r\n");
+  }
+
+  File f_curr = SD.open("curr.csv", FILE_WRITE);
+  if(f_curr){
+    f_curr.print(timestamp);
+    f_curr.print(',');
+    f_curr.print(temp1,DEC);
+    f_curr.print(',');
+    f_curr.println(r_temp1,DEC);
+  } 
+  else {
+    Serial.println(F("File Error"));
+  }
+  f_curr.close();
 }
+
