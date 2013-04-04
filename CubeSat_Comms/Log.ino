@@ -130,4 +130,3 @@ void Log_analog() {
   }
   f_curr.close();
 }
-
