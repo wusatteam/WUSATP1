@@ -204,7 +204,7 @@ void Cam_download() {
 
     if(xbeeDetected && xbeeDiscovered){
       XBee.flush();
-      //delay(100);
+      delay(20); //end of block delay
     }
     
     addr+=BLK;
