@@ -20,7 +20,7 @@ void Sensor_update() {
   volt = map(r_volt,0,1023,0,5000);
   curr = map(r_curr,0,1023,0,5000);
 
-//#ifdef DEBUG_ON
+#ifdef DEBUG_ON
   Serial.print(F("\tPRES: "));
   Serial.println(pres,DEC);
   Serial.print(F("\tTEMP1: "));
@@ -31,5 +31,5 @@ void Sensor_update() {
   Serial.println(volt,DEC);
   Serial.print(F("\tCURR: "));
   Serial.println(curr,DEC);
-//#endif
+#endif
 }
