@@ -51,9 +51,9 @@ void Log_analog() {
   if(f_temp2){
     f_temp2.print(timestamp);
     f_temp2.print(',');
-    f_temp2.print(temp1,DEC);
+    f_temp2.print(temp2,DEC);
     f_temp2.print(',');
-    f_temp2.println(r_temp1,DEC);
+    f_temp2.println(r_temp2,DEC);
   } 
   else {
     Serial.println(F("File Error"));
@@ -65,9 +65,9 @@ void Log_analog() {
   if(f_volt){
     f_volt.print(timestamp);
     f_volt.print(',');
-    f_volt.print(temp1,DEC);
+    f_volt.print(volt,DEC);
     f_volt.print(',');
-    f_volt.println(r_temp1,DEC);
+    f_volt.println(r_volt,DEC);
   } 
   else {
     Serial.println(F("File Error"));
@@ -79,9 +79,9 @@ void Log_analog() {
   if(f_curr){
     f_curr.print(timestamp);
     f_curr.print(',');
-    f_curr.print(temp1,DEC);
+    f_curr.print(curr,DEC);
     f_curr.print(',');
-    f_curr.println(r_temp1,DEC);
+    f_curr.println(r_curr,DEC);
   } 
   else {
     Serial.println(F("File Error"));
