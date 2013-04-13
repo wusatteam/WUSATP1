@@ -1,10 +1,11 @@
-
+// Log analogue readings
 void Log_analog() {
   // Timestamp
   RTC_timestamp();
   Serial.print(F("Log: "));
   Serial.println(timestamp);
 
+  // Clear logs if the command has been received
   if(clearLog){
     clearLog=false;
     SD.remove("pres.csv");
@@ -18,6 +19,7 @@ void Log_analog() {
   // Update sensor readings
   Sensor_update();
 
+  // Send timestamp over comms link
   if(xbeeDetected){
     XBee_waitForCTS();
     XBee.print(F("TSTMP:"));
@@ -33,6 +35,7 @@ void Log_analog() {
     XBee.print("\r\n");
   }
 
+  // Open file and save data
   File f_pres = SD.open("pres.csv", FILE_WRITE);
   if(f_pres){
     f_pres.print(timestamp);
@@ -54,6 +57,7 @@ void Log_analog() {
     XBee.print("\r\n");
   }
 
+  // Open file and save data
   File f_temp1 = SD.open("temp1.csv", FILE_WRITE);
   if(f_temp1){
     f_temp1.print(timestamp);
@@ -75,6 +79,7 @@ void Log_analog() {
     XBee.print("\r\n");
   }
 
+  // Open file and save data
   File f_temp2 = SD.open("temp2.csv", FILE_WRITE);
   if(f_temp2){
     f_temp2.print(timestamp);
@@ -96,6 +101,7 @@ void Log_analog() {
     XBee.print("\r\n");
   }
 
+  // Open file and save data
   File f_volt = SD.open("volt.csv", FILE_WRITE);
   if(f_volt){
     f_volt.print(timestamp);
@@ -117,6 +123,7 @@ void Log_analog() {
     XBee.print("\r\n");
   }
 
+  // Open file and save data
   File f_curr = SD.open("curr.csv", FILE_WRITE);
   if(f_curr){
     f_curr.print(timestamp);
