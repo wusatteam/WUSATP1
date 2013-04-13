@@ -1,5 +1,7 @@
+// Receive buffer
 char xbuf[32];
 
+// Initialise XBee
 void XBee_init(){
   pinMode(XB_ON,INPUT);
   pinMode(XB_CTS,INPUT);
@@ -28,13 +30,13 @@ boolean XBee_enterCommand() {
   XBee.flush();
   XBee_discardBuffer();  
 
-  delay(1100);
-  XBee.print("+++");
-  XBee.flush();
+  delay(1100); //Guard time
+  XBee.print("+++"); //Command mode
+  XBee.flush(); //Guard time
   delay(1100);
   rcv = XBee.readBytesUntil('\r',xbuf,32);
 
-  return rcv==2 ? true:false;
+  return rcv==2 ? true:false; //'OK' expected
 }
 
 // Exit command mode
@@ -58,15 +60,18 @@ boolean XBee_discoverNode(){
   return rcv==2 ? true:false;
 }
 
+// Empty received buffer
 void XBee_discardBuffer(){
   while(XBee.available())
     XBee.read();
 }
 
+// Check status of the CTS line
 boolean XBee_CTS(){
   return !digitalRead(XB_CTS);
 }
 
+// Wait until clear to send data
 void XBee_waitForCTS(){
   int count=0;
   while(!XBee_CTS() && count<100){
@@ -82,10 +87,10 @@ void XBee_waitForCTS(){
   
 }
 
+// Force the XBee to reset by driving XB_RST low
 void XBee_reset(){
-  pinMode(XB_RST,OUTPUT);
-  //digitalWrite(XB_RST,LOW); //Unsure if necessary
+  pinMode(XB_RST,OUTPUT); //Drives low by default
   delay(5); //100us minimum
-  pinMode(XB_RST,INPUT);
+  pinMode(XB_RST,INPUT); //High impedance
   delay(10);
 }
