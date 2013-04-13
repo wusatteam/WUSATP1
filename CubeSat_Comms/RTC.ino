@@ -1,10 +1,11 @@
-
+// Initialise RTC
 void RTC_init() {
   Wire.begin();
   RTC.begin();
 
+  // Check time and date have been set
   if (! RTC.isrunning()) {
-    // following line sets the RTC to the date & time this sketch was compiled
+    // Set to build date and time
     RTC.adjust(DateTime(__DATE__, __TIME__));
     
 #ifdef DEBUG_ON 
@@ -14,6 +15,7 @@ void RTC_init() {
   }
 }
 
+// Generate string timestamp
 void RTC_timestamp(){
   //  char timestamp[]="2010/00/00 00:00:00";
   DateTime now = RTC.now();
