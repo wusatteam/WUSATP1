@@ -1,4 +1,4 @@
-
+// Set pin directions
 void Sensor_init(){
   pinMode(PRES,INPUT);
   pinMode(TEMP1,INPUT);
@@ -7,6 +7,7 @@ void Sensor_init(){
   pinMode(CURR,INPUT);
 }
 
+// Update Analogue Readings
 void Sensor_update() {
   r_pres = analogRead(PRES);
   r_temp1 = analogRead(TEMP1);
@@ -14,6 +15,7 @@ void Sensor_update() {
   r_volt = analogRead(VOLT);
   r_curr = analogRead(CURR);
 
+  // Scale measured values to 0-5V
   pres = map(r_pres,0,1023,0,5000);
   temp1 = map(r_temp1,0,1023,0,5000);
   temp2 = map(r_temp2,0,1023,0,5000);
