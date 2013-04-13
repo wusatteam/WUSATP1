@@ -2,12 +2,14 @@
 // Requires modification to SoftwareSerial.h
 //  - #define _SS_MAX_RX_BUFF 256
 
+// Define buffer and characters received variables
 char res[BLK];
 int rcv = 0;
 
+// Camera initialisation
 void Cam_init() {
-  Cam.begin(38400);
-  Cam.setTimeout(5000);
+  Cam.begin(38400); // Open serial port at 38400Baud
+  Cam.setTimeout(5000); // Timeout increased for reset and receive code
 
 #ifdef DEBUG_ON 
   Serial.print(F("\tCAM: RX B: ")); 
@@ -15,36 +17,43 @@ void Cam_init() {
   Serial.print(F("\tCAM: BLK: ")); 
   Serial.println(BLK,DEC);
 #endif
-
+  
+  // Output error if the SoftwareSerial buffer size has not been increased
   if(_SS_MAX_RX_BUFF<256)
     Serial.println(F("RX B Error"));
 
+  // Reset camera
   if(!Cam_reset()){
     Serial.println(F("Camera Error"));
     Error();
   }
 }
 
+// Reset camera
 boolean Cam_reset() {
+  // Reset instruction
   const char RESET[4] = {
     0x56,0x00,0x26,0x00                                                                              };
   Cam_command(RESET,4);
 
+  // Expected response is 71 bytes
   rcv = Cam.readBytes(res,71); //71
   return rcv == 71;
 }
 
 void Cam_capture() {
+  // Capture instruction
   const char CAPTURE[5] = {
     0x56,0x00,0x36,0x01,0x00                                                                              };
 
-#ifdef OPTION_FLASH
+#ifdef OPTION_FLASH // Flash LED when picture is taken
   LED_on();
   delay(200);
 #endif
 
   Cam_command(CAPTURE,5);
 
+  // Expected response is 5 bytes
   rcv = Cam.readBytes(res,5); //5
   if(rcv<5){
     Serial.println("Capture Error");

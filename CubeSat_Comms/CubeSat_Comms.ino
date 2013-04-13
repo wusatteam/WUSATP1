@@ -1,4 +1,6 @@
-//#define DEBUG_ON //Approx 498 bytes
+//#define DEBUG_ON //Enable debug output from USB port
+
+//Port Definitions
 #define XB_ON      10
 #define XB_CTS     8
 #define XB_RST     7
@@ -11,6 +13,8 @@
 #define TEMP2      A1
 #define VOLT       A3
 #define CURR       A4
+
+//Camera Constants
 #define CAM_KH     0x00
 #define CAM_KL     0xF0
 #define CAM_XH     0x00
@@ -22,9 +26,9 @@
 //#define OPTION_SET_RES
 //#define OPTION_RAM_CHECK //Approx 224 bytes
 //#define OPTION_SERIAL_WAIT
-#define CMD_PORT  Serial1
+#define CMD_PORT  Serial1 //Serial port to listen for commands on
 #define XBee      Serial1
-#define NODE      "WUSATBASE"
+#define NODE      "WUSATBASE" //Base station node identifier
 
 // RTClib must come after Wire
 #include <Wire.h>
@@ -49,9 +53,10 @@ void setup() {
   // Initialise USB serial port - Debug
   Serial_init();
 
-  //Initialise Comms
+  // Initialise Comms
   XBee_init();
 
+  // Print header information to USB debug port
   Serial_header();
 
   // Set up port directions
@@ -68,19 +73,18 @@ void setup() {
   // Connect to camera and reset
   Cam_init();
 
-#ifdef OPTION_SET_RES
+#ifdef OPTION_SET_RES // If this is the first time the camera module is used then the resolution must be changed
   // Set 640x480 resolution
   Cam_setRes();
 #endif
 
-  //DEBUGLN("Boot Complete.");
   Serial.print(F("Started "));
   Serial.println(timestamp);
 }
 
 void loop() {
   Serial.println(F("=== Main FW Loop ==="));
-  Ram_check();
+  Ram_check();  // Controlled by OPTION_RAM_CHECK, used for debugging unexpected errors
 
   // Process waiting command
   Serial_command();
@@ -103,7 +107,7 @@ void loop() {
     }
 
   // Log analog readings
-  delay(100); //Lost character error
+  delay(100); //Required to allow XBee to exit command mode
   Log_analog();
 
   // Take picture
@@ -126,6 +130,7 @@ void loop() {
 }
 
 
+// RAM check code
 void Ram_check(){
 #ifdef OPTION_RAM_CHECK
   int f = freeRam();
@@ -138,6 +143,7 @@ void Ram_check(){
 #endif
 }
 
+// Calculate free RAM code
 #ifdef OPTION_RAM_CHECK
 int freeRam () {
   extern int __heap_start, *__brkval; 
